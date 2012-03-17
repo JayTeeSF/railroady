@@ -1,0 +1,1 @@
+RUBYOPT='-rpsych' rake install
