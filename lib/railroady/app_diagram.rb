@@ -14,7 +14,7 @@ class AppDiagram
     @graph = DiagramGraph.new
     @graph.show_label = @options.label
   end
-  
+
 
   # Print diagram
   def print
@@ -27,13 +27,13 @@ class AppDiagram
         exit 2
       end
     end
-    
+
     if @options.xmi 
-        STDERR.print "Generating XMI diagram\n" if @options.verbose
-    	STDOUT.print @graph.to_xmi
+      STDERR.print "Generating XMI diagram\n" if @options.verbose
+      STDOUT.print @graph.to_xmi
     else
-        STDERR.print "Generating DOT graph\n" if @options.verbose
-        STDOUT.print @graph.to_dot 
+      STDERR.print "Generating DOT graph\n" if @options.verbose
+      STDOUT.print @graph.to_dot 
     end
 
     if @options.output
@@ -46,7 +46,7 @@ class AppDiagram
   end
 
   private 
-  
+
   # Load Rails application's environment
   def load_environment
     STDERR.print "Loading application environment\n" if @options.verbose
@@ -78,11 +78,15 @@ class AppDiagram
   # Print error when loading Rails application
   def print_error(type)
     STDERR.print "Error loading #{type}.\n  (Are you running " +
-                 "#{@options.app_name} on the aplication's root directory?)\n\n"
+      "#{@options.app_name} on the aplication's root directory?)\n\n"
   end
 
   # Extract class name from filename
   def extract_class_name(filename)
+    # this fails to handle nested modules/classes or module/class lines within multi-line comments (assuming Ruby has that)
+    module_names = open(filename).map{|l| m = l.match(/^\s*module\s+([\w\:]+)/i); m && m[1] }.compact
+    class_names = open(filename).map{|l| m = l.match(/^\s*class\s+([\w\:]+)/i); m && m[1] }.compact
+    return module_names.first || class_names.first
     #filename.split('/')[2..-1].join('/').split('.').first.camelize
     # Fixed by patch from ticket #12742
     # File.basename(filename).chomp(".rb").camelize
