@@ -35,9 +35,8 @@ end
 
 task :default => :spec
 
-#require 'rake/rdoctask'
 require 'rdoc/task'
-require 'railroady/version'
+require "#{File.dirname(__FILE__)}/lib/railroady/version.rb"
 Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title = "railroady #{RailRoady::VERSION::STRING}"
